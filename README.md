@@ -1,4 +1,4 @@
-# Team-Unemployed-MIST4610-Group-Project-1
+# Team Unemployed MIST4610 Group Project 1
 
 ## Team Name: 
 15058 Unemployed
@@ -7,7 +7,7 @@
 
 1. Ben Lim [gituser](link)
 2. Jason Roode
-3. Jack Schaeffer 
+3. Jack Schaeffer
 4. Yirong Shen [@Yishen6](https://www.github.com/Yishen6)
 5. Nathan To
 
@@ -19,56 +19,73 @@ In order to provide the most efficient and organized method of patient intakes, 
 
 Explanation of the data model: 
 
-The data model is based off of how a hospital is potentially ran. Each entity represents either a hospital department (Doctor, Insurance, Billing, etc.) or a client that the hospital takes (Insurance, Patient, Appointment, etc.). 
+The data model is based off of how a hospital is potentially ran. It creates a comprehensive view of the medical system, insurance coverage, appointments, patient care, and relationships between doctors, nurses and patients. 
 
-At the center of the data model, there is an entity labeled Doctor. Each doctor can be identified through their unique ID and has relevant information such as their names, department and years of experience in our database. For every doctor, there can be multiple appointments with patients. Each doctor can also have up to one malpractice case. Malpractice cases are tracked in a separate entity and can be identified by idDoctor. 
+Starting on the upper left corner, we have an entity labeled **Insurance**. It holds attributes such as idInsurance, InsuranceName, PremiumAmount, and Coverage. These columns help us identify each individual insurance company a customer may be using and how much the insurance may be offering to cover. Insurance has two many to many relationships with Doctor and Patient. 
 
-To the right of the Doctor entity, there is a separate entity called Patient. Each patient can have multiple doctors treat them and each doctor can treat multiple patients. This is shown by the table Patient_Has_Doctor, which holds data on when a patient is assigned a doctor and their discharge date. Each patient can also have multiple appointments and due to that they can have multiple Billing entries as well. But, each Billing entry only belongs to one patient. 
+The relationship with Doctors create a third entity table named, **Network**. This is a weak entity with two foreign identifiers which are the primary keys of Insurance and Doctor. An insurance plan can accept multiple doctors. A doctor can also accept to take multiple insurance policies. But each instance of a network must only accept a single insurance plan and doctor at one time. 
 
-For Insurance, one insurance policy can cover multiple patients' bills. Through the entity DoctoralCoverage, insurance has a many to many relationship with Doctor, meaning a doctor can accept multiple insurance policies and an insurance policy can be accepted by multiple doctors. 
+The biggest entity we have is the table representing **Doctor**. This entity holds the attributes idDoctor, Doctorfname, Doctorlname, Doctordept, YearsExperience, HeadDoctor, Specialization, Email, and PhoneNumber. Besides the data to identify or contact a doctor, this table also holds information regarding a department head that can be in charge of multiple doctors. Specialization is also a foreign key from the entity Concentration. Doctor is also linked to Appointment and CareHistory. 
 
-A Nurse can attend to multiple patients and a patient can have multiple nurses. The nurses shift is recorded in the Patient_has_Nurse table. 
+**Concentration** holds an identifier called idConcentration and ConcentrationName. A specific area of concentration can be practiced by multiple doctors. 
 
-Lastly, we depect Medication records for each patient. The same medication can be prescribed to multiple patients and a patient can be prescribed various types of medication. The date a patient starts a certain medication is recorded in the table PatientMedication. 
+For every **Appointment** that is made, we note the idAppointment, Appointmentdate, Appointmenttime, idPatient, and idDoctor. Appointment is also a third entity created from the many to many relationship between Doctor and Patient. An appointment can involve only one patient and doctor at a time. A doctor can see to multiple appointments and a patient can book multiple appointments. 
 
-Overall, the database revolves around the relationships between patients, doctors, nurses, appointments, medications and insurance. Many-to-many relationships are shown through bridge tables such as Patient_has_Doctor, Patient_has_Nurse, PatientMedication and DoctoralCoverage. 
+Another big entity we store data on is **Patient**. We record the idPatient, Patientfname, Patientlname, PatientAge, Gender, Email, PhoneNumber and DOB for every patient. Patient has many relationships with entities such as Patient_has_Nurse, PatientMedication, EmergencyContact, Billing and CareHistory. 
 
-![MIST4610 Project 1 Model](https://github.com/user-attachments/assets/cde60cd4-bfba-48b3-950e-96306b98ba1c)
+**CareHistory** is a weak entity made based of the many to many relationship between Doctor and Patient. A doctor can provide care to multiple patients and a patient can be treated by multiple doctors. However, each instance of care is recorded to only have a single patient and doctor simultaneously. CareHistory also records the AssignedDate and DischargeDate so we know the duration of the treatment time. 
+
+An important entity created by a many to many relationship between Insurance and Patient is **Billing**. This table holds DateBilled, Deductible, CoPay, PaymentStatus and AmountBilled. From an accountign perspective, this table holds the data that we need to calculate how much profit the hospital is making. An insurance company can provide coverage for multiple patients and a patient can use an insurance plan multiple times. But for our books, we record each bill with only one insurance plan and one patient at a time. This way we can organize which services were covered and which may still be processing. 
+
+Taking a look at the upper right corner, we have an entity called **Nurse**. This entity holds information on idNurse, Nursefname, Nurselname, HoursWorked, Email, and PhoneNumber. Nurses have a many to many relationship to patients, which creates a separate entity called **Patient_has_Nurse**. This weak entity holds information such as ShiftStart and ShiftEnd to represent the working hours of the nurse. A patient can be helped out by multiple nurses and a nurse can see to multiple patients. A nurse can only work on only one patient at a time. 
+
+An individual entity we have to the is **EmergencyContact**. It holds the information regarding each patient's emergency contact. Their unique id is listed along with EmergencyFName, EmergencyLName, Relationship, Email, PhoneNumber and PatientID. A patient can have one emergency contact and each emergency contact is linked to one patient. 
+
+Aside from patient care, we also have data regarding **Medication** that can be prescribed to patients. This entity holds idMedication, MedicationName, DosageMG, and Frequency. This entity also has a many to many relationship with patients that creates another weak entity called **PatientMedication**. Besides being identified by the foreign keys from Patient and Medication, it also holds the StartDate of each medication. A patient can take multiple medications and a specific kind of medication can be assigned to multiple patient. But each prescription is recorded to only hold the data of one patient and one type of medication at once. 
+
+![New Model](https://github.com/user-attachments/assets/4964daa2-7ced-4983-9c3b-64abd3741fc7)
+
 
 ## Data Dictionary: 
 
 <img width="578" alt="image" src="https://github.com/user-attachments/assets/82e3ded6-e391-4723-8309-690ba17d937c">
 
-<img width="581" alt="image" src="https://github.com/user-attachments/assets/b24be467-7df7-4b6e-87b0-5797a8ea6a5e">
+<img width="610" alt="image" src="https://github.com/user-attachments/assets/d28dee6e-a643-4133-9804-48d378b9e238">
 
-<img width="583" alt="image" src="https://github.com/user-attachments/assets/795f19e9-523d-4d87-b393-c6771ff5b686">
+<img width="580" alt="image" src="https://github.com/user-attachments/assets/1f186705-522c-425a-973b-272c7842a373">
 
-<img width="582" alt="image" src="https://github.com/user-attachments/assets/c08eb15b-b3e7-44ca-a90e-d8ee4f884e75">
+<img width="580" alt="image" src="https://github.com/user-attachments/assets/d656399f-8d1c-47d7-85ab-18bec6211b9d">
 
-<img width="584" alt="image" src="https://github.com/user-attachments/assets/d928f264-b50c-49f2-83cb-ad4b79cc4ad8">
+<img width="618" alt="image" src="https://github.com/user-attachments/assets/145684ef-c362-4401-88aa-663651250383">
 
-<img width="582" alt="image" src="https://github.com/user-attachments/assets/b1e6c39d-596d-458a-9977-52b0234daa58">
+<img width="612" alt="image" src="https://github.com/user-attachments/assets/fdca2640-aee8-415c-b6b1-de304c0d44f5">
 
-<img width="583" alt="image" src="https://github.com/user-attachments/assets/adef2803-4b6f-4ed3-85cb-d54eebb3bab8">
+<img width="582" alt="image" src="https://github.com/user-attachments/assets/927d55b0-346e-44ad-b2bb-041628cc1d7d">
 
-<img width="582" alt="image" src="https://github.com/user-attachments/assets/5e3b9afd-60cf-47ae-b191-c4c604d5eee4">
+<img width="580" alt="image" src="https://github.com/user-attachments/assets/260e649e-b353-43d9-b5bd-cee25491a895">
 
-<img width="581" alt="image" src="https://github.com/user-attachments/assets/a855a2aa-9b8e-437e-9e13-f2f99b061efe">
+<img width="582" alt="image" src="https://github.com/user-attachments/assets/5d2376b1-97a9-4dee-8127-d9a63a6b3cc2">
 
-<img width="583" alt="image" src="https://github.com/user-attachments/assets/84033ca0-71a5-435a-87d6-ee16d0c378b3">
+<img width="581" alt="image" src="https://github.com/user-attachments/assets/38443938-aa73-4145-8edb-18b2f7ec65a5">
 
-<img width="580" alt="image" src="https://github.com/user-attachments/assets/524552dd-4bdf-4e0d-a638-d3de809d0362">
+<img width="613" alt="image" src="https://github.com/user-attachments/assets/cd4f1a51-e38d-4b27-822b-87699d998faf">
 
-<img width="582" alt="image" src="https://github.com/user-attachments/assets/aa42e2bd-5cd3-47f2-90dd-b7840a53dabf">
+<img width="610" alt="image" src="https://github.com/user-attachments/assets/7fe060a3-2252-4af6-b531-506e861bff1f">
+
+<img width="609" alt="image" src="https://github.com/user-attachments/assets/7c36f8a5-c3a2-49f9-ba93-05642b44b41e">
 
 ## Queries: 
 
 Insert Queries Table Here
 
-Query 1: 
+Query 1: Give the appointments that were scheduled between October 20th and October 27th. Show the appointment ID, date and time. Also show the full names of the patient and doctor that was involved in the appointment. 
+
+<img width="1219" alt="image" src="https://github.com/user-attachments/assets/3c796dc7-1d65-47f4-b582-6d5d0939053c">
+
+Query 2: 
 
 ## Database Information: 
 
-Name of Database: cs_js37990
+Name of Database: cs_jps37990
 
 Additional information: Each query listed above is marked in the database using stored procedures which can be called using the following format: CALL TP_Q1();
